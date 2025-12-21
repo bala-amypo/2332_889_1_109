@@ -1,59 +1,78 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.*;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.*;
+
 import java.util.List;
 
 public class RecommendationEngineService {
 
-    private final PurchaseIntentRecordRepository intentRepo;
-    private final UserProfileRepository userRepo;
-    private final CreditCardRecordRepository cardRepo;
-    private final RewardRuleRepository ruleRepo;
-    private final RecommendationRecordRepository recRepo;
+    private final PurchaseIntentRecordRepository intentRepository;
+    private final UserProfileRepository userRepository;
+    private final CreditCardRecordRepository cardRepository;
+    private final RewardRuleRepository ruleRepository;
+    private final RecommendationRecordRepository recommendationRepository;
 
     public RecommendationEngineService(
-            PurchaseIntentRecordRepository intentRepo,
-            UserProfileRepository userRepo,
-            CreditCardRecordRepository cardRepo,
-            RewardRuleRepository ruleRepo,
-            RecommendationRecordRepository recRepo) {
+            PurchaseIntentRecordRepository intentRepository,
+            UserProfileRepository userRepository,
+            CreditCardRecordRepository cardRepository,
+            RewardRuleRepository ruleRepository,
+            RecommendationRecordRepository recommendationRepository) {
 
-        this.intentRepo = intentRepo;
-        this.userRepo = userRepo;
-        this.cardRepo = cardRepo;
-        this.ruleRepo = ruleRepo;
-        this.recRepo = recRepo;
+        this.intentRepository = intentRepository;
+        this.userRepository = userRepository;
+        this.cardRepository = cardRepository;
+        this.ruleRepository = ruleRepository;
+        this.recommendationRepository = recommendationRepository;
     }
 
     public RecommendationRecord generateRecommendation(Long intentId) {
 
-        PurchaseIntentRecord intent = intentRepo.findById(intentId).orElseThrow();
-        List<CreditCardRecord> cards = cardRepo.findActiveCardsByUser(intent.getUserId());
+        PurchaseIntentRecord intent = intentRepository.findById(intentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Intent not found"));
 
-        double bestValue = 0;
-        Long bestCard = null;
+        List<CreditCardRecord> activeCards =
+                cardRepository.findActiveCardsByUser(intent.getUserId());
 
-        for (CreditCardRecord card : cards) {
+        double bestReward = 0;
+        Long bestCardId = null;
+
+        for (CreditCardRecord card : activeCards) {
             List<RewardRule> rules =
-                    ruleRepo.findActiveRulesForCardCategory(card.getId(), intent.getCategory());
+                    ruleRepository.findActiveRulesForCardCategory(
+                            card.getId(), intent.getCategory());
 
             for (RewardRule rule : rules) {
-                double value = intent.getAmount() * rule.getMultiplier();
-                if (value > bestValue) {
-                    bestValue = value;
-                    bestCard = card.getId();
+                double reward = intent.getAmount() * rule.getMultiplier();
+                if (reward > bestReward) {
+                    bestReward = reward;
+                    bestCardId = card.getId();
                 }
             }
         }
 
-        RecommendationRecord rec = new RecommendationRecord();
-        rec.setUserId(intent.getUserId());
-        rec.setPurchaseIntentId(intentId);
-        rec.setRecommendedCardId(bestCard);
-        rec.setExpectedRewardValue(bestValue);
-        rec.setCalculationDetailsJson("{}");
+        RecommendationRecord record = new RecommendationRecord();
+        record.setUserId(intent.getUserId());
+        record.setPurchaseIntentId(intentId);
+        record.setRecommendedCardId(bestCardId);
+        record.setExpectedRewardValue(bestReward);
+        record.setCalculationDetailsJson("{}");
 
-        return recRepo.save(rec);
+        return recommendationRepository.save(record);
+    }
+
+    public RecommendationRecord getRecommendationById(Long id) {
+        return recommendationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Recommendation not found"));
+    }
+
+    public List<RecommendationRecord> getRecommendationsByUser(Long userId) {
+        return recommendationRepository.findByUserId(userId);
+    }
+
+    public List<RecommendationRecord> getAllRecommendations() {
+        return recommendationRepository.findAll();
     }
 }
