@@ -8,27 +8,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional [cite: 1399]
+@Transactional
 public class UserProfileServiceImpl implements UserProfileService {
     private final UserProfileRepository repository;
-    private final PasswordEncoder encoder;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserProfileServiceImpl(UserProfileRepository repository, PasswordEncoder encoder) {
+    public UserProfileServiceImpl(UserProfileRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
-        this.encoder = encoder;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserProfile register(UserProfile user) {
-        if(repository.findByEmail(user.getEmail()).isPresent()) 
-            throw new IllegalArgumentException("Email exists"); [cite: 1407]
-        user.setPassword(encoder.encode(user.getPassword())); [cite: 1408]
-        if(user.getRole() == null) user.setRole("USER"); [cite: 1409]
-        return repository.save(user); [cite: 1410]
+        if (repository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("Email exists");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return repository.save(user);
     }
 
     @Override
     public UserProfile findByEmail(String email) {
-        return repository.findByEmail(email).orElseThrow(() -> new RuntimeException("Not Found")); [cite: 1413]
+        return repository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
     }
 }
