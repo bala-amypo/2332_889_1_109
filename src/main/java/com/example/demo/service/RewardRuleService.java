@@ -1,34 +1,26 @@
-package com.example.demo.service.impl;
+package com.example.demo.service;
 
-import com.example.demo.entity.UserProfile;
-import com.example.demo.repository.UserProfileRepository;
-import com.example.demo.service.UserProfileService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.example.demo.entity.RewardRule;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.repository.RewardRuleRepository;
+import java.util.List;
 
-@Service
-@Transactional
-public class UserProfileServiceImpl implements UserProfileService {
-    private final UserProfileRepository repository;
-    private final PasswordEncoder passwordEncoder;
+public class RewardRuleService {
 
-    public UserProfileServiceImpl(UserProfileRepository repository, PasswordEncoder passwordEncoder) {
-        this.repository = repository;
-        this.passwordEncoder = passwordEncoder;
+    private final RewardRuleRepository repo;
+
+    public RewardRuleService(RewardRuleRepository repo) {
+        this.repo = repo;
     }
 
-    @Override
-    public UserProfile register(UserProfile user) {
-        if (repository.existsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException("Email exists");
+    public RewardRule createRule(RewardRule rule) {
+        if (rule.getMultiplier() <= 0) {
+            throw new BadRequestException("Price multiplier must be > 0");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return repository.save(user);
+        return repo.save(rule);
     }
 
-    @Override
-    public UserProfile findByEmail(String email) {
-        return repository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+    public List<RewardRule> getActiveRules() {
+        return repo.findByActiveTrue();
     }
 }
