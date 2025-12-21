@@ -1,14 +1,16 @@
 package com.example.demo.exception;
 
-import com.example.demo.dto.ApiErrorResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice [cite: 1591]
+import java.util.Map;
+
+@RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiErrorResponse handleGeneric(Exception ex) { 
-        return new ApiErrorResponse(500, "INTERNAL_SERVER_ERROR", ex.getMessage(), ""); [cite: 1611, 1614]
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Map<String, String>> handleBadRequest(BadRequestException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", ex.getMessage()));
     }
 }
