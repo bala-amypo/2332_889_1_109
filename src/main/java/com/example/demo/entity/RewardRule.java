@@ -1,40 +1,32 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 @Entity
-@Table(name = "reward_rules",
-       uniqueConstraints = @UniqueConstraint(columnNames = {"card_id", "category"}))
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class RewardRule {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "card_id", nullable = false)
-    private CreditCardRecord card;
-
-    @Column(nullable = false)
+    private Long cardId;
     private String category;
-
-    @Column(nullable = false)
-    private String rewardType;
-
-    @Column(nullable = false)
     private Double multiplier;
+    private Boolean active;
 
-    @Column(nullable = false)
-    private Boolean active = true;
+    // getters & setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    @PrePersist
-    @PreUpdate
-    protected void validate() {
-        if (multiplier == null || multiplier <= 0)
-            throw new IllegalArgumentException("Price multiplier must be > 0");
-    }
+    public Long getCardId() { return cardId; }
+    public void setCardId(Long cardId) { this.cardId = cardId; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+
+    public Double getMultiplier() { return multiplier; }
+    public void setMultiplier(Double multiplier) { this.multiplier = multiplier; }
+
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 }

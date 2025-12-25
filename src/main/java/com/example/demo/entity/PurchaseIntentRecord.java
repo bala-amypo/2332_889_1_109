@@ -1,45 +1,32 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@Table(name = "purchase_intents")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class PurchaseIntentRecord {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserProfile user;
-
-    @Column(nullable = false)
+    private Long userId;
+    private String category;
+    private String merchant;
     private Double amount;
 
-    @Column(nullable = false)
-    private String category;
+    // getters & setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    private String merchant;
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 
-    private LocalDateTime intentDate;
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
 
-    @OneToMany(mappedBy = "purchaseIntent", cascade = CascadeType.ALL)
-    private Set<RecommendationRecord> recommendations = new HashSet<>();
+    public String getMerchant() { return merchant; }
+    public void setMerchant(String merchant) { this.merchant = merchant; }
 
-    @PrePersist
-    @PreUpdate
-    protected void validate() {
-        if (amount == null || amount <= 0)
-            throw new IllegalArgumentException("Purchase amount must be > 0");
-        if (intentDate == null)
-            intentDate = LocalDateTime.now();
-    }
+    public Double getAmount() { return amount; }
+    public void setAmount(Double amount) { this.amount = amount; }
 }

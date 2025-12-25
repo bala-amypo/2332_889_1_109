@@ -1,44 +1,37 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "recommendations")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class RecommendationRecord {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserProfile user;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "purchase_intent_id", nullable = false)
-    private PurchaseIntentRecord purchaseIntent;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "recommended_card_id", nullable = false)
-    private CreditCardRecord recommendedCard;
-
-    @Column(nullable = false)
+    private Long userId;
+    private Long purchaseIntentId;
+    private Long recommendedCardId;
     private Double expectedRewardValue;
-
-    @Lob
     private String calculationDetailsJson;
 
-    private LocalDateTime recommendedAt;
+    // getters & setters
+    public Long getId() { return id; }
 
-    @PrePersist
-    protected void onCreate() {
-        if (expectedRewardValue == null || expectedRewardValue < 0)
-            throw new IllegalArgumentException("Expected reward value must be >= 0");
-        recommendedAt = LocalDateTime.now();
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+
+    public Long getPurchaseIntentId() { return purchaseIntentId; }
+    public void setPurchaseIntentId(Long purchaseIntentId) { this.purchaseIntentId = purchaseIntentId; }
+
+    public Long getRecommendedCardId() { return recommendedCardId; }
+    public void setRecommendedCardId(Long recommendedCardId) { this.recommendedCardId = recommendedCardId; }
+
+    public Double getExpectedRewardValue() { return expectedRewardValue; }
+    public void setExpectedRewardValue(Double expectedRewardValue) { this.expectedRewardValue = expectedRewardValue; }
+
+    public String getCalculationDetailsJson() { return calculationDetailsJson; }
+    public void setCalculationDetailsJson(String calculationDetailsJson) {
+        this.calculationDetailsJson = calculationDetailsJson;
     }
 }

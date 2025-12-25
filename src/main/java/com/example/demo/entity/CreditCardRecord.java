@@ -1,53 +1,45 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@Table(name = "credit_cards")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class CreditCardRecord {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserProfile user;
-
-    @Column(nullable = false)
+    private Long userId;
     private String cardName;
-
-    @Column(nullable = false)
     private String issuer;
-
-    @Column(nullable = false)
-    private String cardType;
-
-    @Column(nullable = false)
     private Double annualFee;
-
-    @Column(nullable = false)
-    private String status = "ACTIVE";
-
+    private String status;
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
-    private Set<RewardRule> rewardRules = new HashSet<>();
-
-    @ManyToMany(mappedBy = "favouriteCards")
-    private Set<UserProfile> favouredByUsers = new HashSet<>();
-
     @PrePersist
-    protected void onCreate() {
-        if (annualFee == null || annualFee < 0)
-            throw new IllegalArgumentException("Annual fee must be >= 0");
-        createdAt = LocalDateTime.now();
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
     }
+
+    // getters & setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+
+    public String getCardName() { return cardName; }
+    public void setCardName(String cardName) { this.cardName = cardName; }
+
+    public String getIssuer() { return issuer; }
+    public void setIssuer(String issuer) { this.issuer = issuer; }
+
+    public Double getAnnualFee() { return annualFee; }
+    public void setAnnualFee(Double annualFee) { this.annualFee = annualFee; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
 }
