@@ -1,84 +1,53 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.CreditCardRecord;
-import com.example.demo.entity.PurchaseIntentRecord;
 import com.example.demo.entity.RecommendationRecord;
-import com.example.demo.entity.UserProfile;
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.CreditCardRecordRepository;
 import com.example.demo.repository.PurchaseIntentRecordRepository;
 import com.example.demo.repository.RecommendationRecordRepository;
 import com.example.demo.repository.UserProfileRepository;
 import com.example.demo.service.RecommendationEngineService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-@service
 
-public class RecommendationEngineServiceImpl
-        implements RecommendationEngineService {
+@Service
+public class RecommendationEngineServiceImpl implements RecommendationEngineService {
 
-    private final PurchaseIntentRecordRepository intentRepo;
+    private final PurchaseIntentRecordRepository purchaseRepo;
     private final UserProfileRepository userRepo;
-    private final CreditCardRecordRepository cardRepo;
-    private final RecommendationRecordRepository recRepo;
+    private final CreditCardRecordRepository creditRepo;
+    private final RecommendationRecordRepository recommendationRepo;
 
     public RecommendationEngineServiceImpl(
-            PurchaseIntentRecordRepository intentRepo,
+            PurchaseIntentRecordRepository purchaseRepo,
             UserProfileRepository userRepo,
-            CreditCardRecordRepository cardRepo,
-            RecommendationRecordRepository recRepo) {
-
-        this.intentRepo = intentRepo;
+            CreditCardRecordRepository creditRepo,
+            RecommendationRecordRepository recommendationRepo
+    ) {
+        this.purchaseRepo = purchaseRepo;
         this.userRepo = userRepo;
-        this.cardRepo = cardRepo;
-        this.recRepo = recRepo;
+        this.creditRepo = creditRepo;
+        this.recommendationRepo = recommendationRepo;
     }
 
     @Override
-    public RecommendationRecord generateRecommendation(Long intentId) {
-
-        PurchaseIntentRecord intent = intentRepo.findById(intentId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Intent not found"));
-
-        UserProfile user = userRepo.findById(intent.getUserId())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found"));
-
-        List<CreditCardRecord> cards =
-                cardRepo.findActiveCardsByUser(user.getId());
-
-        if (cards.isEmpty()) {
-            throw new BadRequestException("No active cards");
-        }
-
-        CreditCardRecord bestCard = cards.get(0);
-
-        RecommendationRecord rec = new RecommendationRecord();
-        rec.setUserId(user.getId());
-        rec.setPurchaseIntentId(intentId);
-        rec.setRecommendedCardId(bestCard.getId());
-        rec.setExpectedRewardValue(intent.getAmount());
-
-        return recRepo.save(rec);
-    }
-
-    @Override
-    public RecommendationRecord getRecommendationById(Long id) {
-        return recRepo.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Recommendation not found"));
+    public RecommendationRecord generateRecommendation(Long userId) {
+        // TODO: implement recommendation logic
+        return null;
     }
 
     @Override
     public List<RecommendationRecord> getRecommendationsByUser(Long userId) {
-        return recRepo.findByUserId(userId);
+        return recommendationRepo.findByUserId(userId);
+    }
+
+    @Override
+    public RecommendationRecord getRecommendationById(Long id) {
+        return recommendationRepo.findById(id).orElse(null);
     }
 
     @Override
     public List<RecommendationRecord> getAllRecommendations() {
-        return recRepo.findAll();
+        return recommendationRepo.findAll();
     }
 }
