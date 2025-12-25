@@ -17,18 +17,18 @@ public class RewardRuleServiceImpl implements RewardRuleService {
     }
 
     @Override
-    public RewardRule saveRewardRule(RewardRule rule) {
-        return rewardRuleRepository.save(rule);
-    }
-
-    @Override
-    public List<RewardRule> getAllRewardRules() {
+    public List<RewardRule> getAllRules() {
         return rewardRuleRepository.findAll();
     }
 
     @Override
     public RewardRule getRewardRuleById(Long id) {
         return rewardRuleRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public RewardRule saveRewardRule(RewardRule rule) {
+        return rewardRuleRepository.save(rule);
     }
 
     @Override

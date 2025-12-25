@@ -17,17 +17,17 @@ public class PurchaseIntentServiceImpl implements PurchaseIntentService {
     }
 
     @Override
-    public PurchaseIntentRecord saveIntent(PurchaseIntentRecord intent) {
-        return purchaseRepo.save(intent);
-    }
-
-    @Override
-    public List<PurchaseIntentRecord> getAllIntents() {
-        return purchaseRepo.findAll();
+    public List<PurchaseIntentRecord> getIntentsByUser(Long userId) {
+        return purchaseRepo.findByUserId(userId); // Repository must have this method
     }
 
     @Override
     public PurchaseIntentRecord getIntentById(Long id) {
         return purchaseRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public PurchaseIntentRecord saveIntent(PurchaseIntentRecord intent) {
+        return purchaseRepo.save(intent);
     }
 }
