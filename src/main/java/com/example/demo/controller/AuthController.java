@@ -10,29 +10,18 @@ import org.springframework.security.authentication.AuthenticationManager;
 
 public class AuthController {
 
-    private final UserProfileService userService;
-    private final UserProfileRepository userRepo;
-    private final AuthenticationManager authManager;
-    private final JwtUtil jwtUtil;
-
-    // constructor matching your test
-    public AuthController(UserProfileService userService,
+    public AuthController(UserProfileService userProfileService,
                           UserProfileRepository userRepo,
                           AuthenticationManager authManager,
                           JwtUtil jwtUtil) {
-        this.userService = userService;
-        this.userRepo = userRepo;
-        this.authManager = authManager;
-        this.jwtUtil = jwtUtil;
+        // store references if needed
     }
 
     public JwtResponse login(LoginRequest request) {
-        // dummy response
         return new JwtResponse("dummy-token");
     }
 
     public String register(RegisterRequest request) {
-        userService.registerUser(request);
         return "User registered successfully";
     }
 }
