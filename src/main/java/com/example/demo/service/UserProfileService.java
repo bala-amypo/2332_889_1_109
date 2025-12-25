@@ -1,7 +1,17 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.RegisterRequest;
+import com.example.demo.entity.UserProfile;
+import java.util.List;
 
 public interface UserProfileService {
-    void registerUser(RegisterRequest request);
+
+    UserProfile createUser(UserProfile user);
+
+    UserProfile getUserById(Long id);
+
+    UserProfile updateUserStatus(Long id, boolean active);
+
+    UserProfile findByUserId(String userId);
+
+    List<UserProfile> getAllUsers();
 }
