@@ -11,8 +11,10 @@ import com.example.demo.repository.PurchaseIntentRecordRepository;
 import com.example.demo.repository.RecommendationRecordRepository;
 import com.example.demo.repository.UserProfileRepository;
 import com.example.demo.service.RecommendationEngineService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+@service
 
 public class RecommendationEngineServiceImpl
         implements RecommendationEngineService {

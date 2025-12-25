@@ -4,8 +4,10 @@ import com.example.demo.entity.RewardRule;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.RewardRuleRepository;
 import com.example.demo.service.RewardRuleService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+@service
 
 public class RewardRuleServiceImpl implements RewardRuleService {
 

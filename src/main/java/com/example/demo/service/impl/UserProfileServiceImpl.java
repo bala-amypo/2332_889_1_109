@@ -5,8 +5,10 @@ import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UserProfileRepository;
 import com.example.demo.service.UserProfileService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+@service
 
 public class UserProfileServiceImpl implements UserProfileService {
 
