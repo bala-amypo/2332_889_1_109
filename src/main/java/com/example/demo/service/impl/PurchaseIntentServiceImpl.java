@@ -4,7 +4,8 @@ import com.example.demo.entity.PurchaseIntentRecord;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.PurchaseIntentRecordRepository;
 import com.example.demo.service.PurchaseIntentService;
-
+import org.springframework.web.bind.annotation.*;
+@service
 import java.util.List;
 
 public class PurchaseIntentServiceImpl implements PurchaseIntentService {

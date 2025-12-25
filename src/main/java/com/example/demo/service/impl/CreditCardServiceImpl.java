@@ -4,9 +4,10 @@ import com.example.demo.entity.CreditCardRecord;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.CreditCardRecordRepository;
 import com.example.demo.service.CreditCardService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@service
 public class CreditCardServiceImpl implements CreditCardService {
 
     private final CreditCardRecordRepository repository;
