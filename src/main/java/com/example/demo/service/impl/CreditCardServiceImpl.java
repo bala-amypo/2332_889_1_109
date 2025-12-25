@@ -1,47 +1,38 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.CreditCardRecord;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.CreditCardRecordRepository;
 import com.example.demo.service.CreditCardService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-@service
+
+@Service
 public class CreditCardServiceImpl implements CreditCardService {
 
-    private final CreditCardRecordRepository repository;
+    private final CreditCardRecordRepository creditCardRepository;
 
-    public CreditCardServiceImpl(CreditCardRecordRepository repository) {
-        this.repository = repository;
+    public CreditCardServiceImpl(CreditCardRecordRepository creditCardRepository) {
+        this.creditCardRepository = creditCardRepository;
     }
 
     @Override
-    public CreditCardRecord addCard(CreditCardRecord card) {
-        return repository.save(card);
+    public List<CreditCardRecord> getAllCreditCards() {
+        return creditCardRepository.findAll();
     }
 
     @Override
-    public CreditCardRecord updateCard(Long id, CreditCardRecord card) {
-        CreditCardRecord existing = getCardById(id);
-        card.setId(existing.getId());
-        return repository.save(card);
+    public CreditCardRecord getCreditCardById(Long id) {
+        return creditCardRepository.findById(id).orElse(null);
     }
 
     @Override
-    public CreditCardRecord getCardById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Card not found"));
+    public CreditCardRecord saveCreditCard(CreditCardRecord card) {
+        return creditCardRepository.save(card);
     }
 
     @Override
-    public List<CreditCardRecord> getCardsByUser(Long userId) {
-        return repository.findByUserId(userId);
-    }
-
-    @Override
-    public List<CreditCardRecord> getAllCards() {
-        return repository.findAll();
+    public void deleteCreditCard(Long id) {
+        creditCardRepository.deleteById(id);
     }
 }

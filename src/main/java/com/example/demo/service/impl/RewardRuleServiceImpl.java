@@ -1,51 +1,38 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.RewardRule;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.RewardRuleRepository;
 import com.example.demo.service.RewardRuleService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-@service
 
+@Service
 public class RewardRuleServiceImpl implements RewardRuleService {
 
-    private final RewardRuleRepository repository;
+    private final RewardRuleRepository rewardRuleRepository;
 
-    public RewardRuleServiceImpl(RewardRuleRepository repository) {
-        this.repository = repository;
+    public RewardRuleServiceImpl(RewardRuleRepository rewardRuleRepository) {
+        this.rewardRuleRepository = rewardRuleRepository;
     }
 
     @Override
-    public RewardRule createRule(RewardRule rule) {
-        return repository.save(rule);
+    public RewardRule saveRewardRule(RewardRule rule) {
+        return rewardRuleRepository.save(rule);
     }
 
     @Override
-    public RewardRule updateRule(Long id, RewardRule rule) {
-        RewardRule existing = repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Rule not found"));
-        rule.setId(existing.getId());
-        return repository.save(rule);
+    public List<RewardRule> getAllRewardRules() {
+        return rewardRuleRepository.findAll();
     }
 
     @Override
-    public List<RewardRule> getRulesByCard(Long cardId) {
-        return repository.findAll()
-                .stream()
-                .filter(r -> cardId.equals(r.getCardId()))
-                .toList();
+    public RewardRule getRewardRuleById(Long id) {
+        return rewardRuleRepository.findById(id).orElse(null);
     }
 
     @Override
-    public List<RewardRule> getActiveRules() {
-        return repository.findByActiveTrue();
-    }
-
-    @Override
-    public List<RewardRule> getAllRules() {
-        return repository.findAll();
+    public void deleteRewardRule(Long id) {
+        rewardRuleRepository.deleteById(id);
     }
 }
