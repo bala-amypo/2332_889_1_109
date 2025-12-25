@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.CreditCardRecord;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.CreditCardRecordRepository;
 import com.example.demo.service.CreditCardService;
 
@@ -17,6 +18,20 @@ public class CreditCardServiceImpl implements CreditCardService {
     @Override
     public CreditCardRecord addCard(CreditCardRecord card) {
         return repository.save(card);
+    }
+
+    @Override
+    public CreditCardRecord updateCard(Long id, CreditCardRecord card) {
+        CreditCardRecord existing = getCardById(id);
+        card.setId(existing.getId());
+        return repository.save(card);
+    }
+
+    @Override
+    public CreditCardRecord getCardById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Card not found"));
     }
 
     @Override
