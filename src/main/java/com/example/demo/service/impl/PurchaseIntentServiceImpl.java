@@ -1,33 +1,19 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.PurchaseIntentRecord;
-import com.example.demo.repository.PurchaseIntentRecordRepository;
-import com.example.demo.service.PurchaseIntentService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 @Service
 public class PurchaseIntentServiceImpl implements PurchaseIntentService {
 
-    private final PurchaseIntentRecordRepository purchaseRepo;
+    private final PurchaseIntentRepository repository;
 
-    public PurchaseIntentServiceImpl(PurchaseIntentRecordRepository purchaseRepo) {
-        this.purchaseRepo = purchaseRepo;
+    public PurchaseIntentServiceImpl(PurchaseIntentRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public List<PurchaseIntentRecord> getIntentsByUser(Long userId) {
-        return purchaseRepo.findByUserId(userId); // Repository must have this method
+    public PurchaseIntentRecord createIntent(PurchaseIntentRecord intent) {
+        return repository.save(intent);
     }
 
     @Override
-    public PurchaseIntentRecord getIntentById(Long id) {
-        return purchaseRepo.findById(id).orElse(null);
-    }
-
-    @Override
-    public PurchaseIntentRecord saveIntent(PurchaseIntentRecord intent) {
-        return purchaseRepo.save(intent);
+    public List<PurchaseIntentRecord> getAllIntents() {
+        return repository.findAll();
     }
 }
