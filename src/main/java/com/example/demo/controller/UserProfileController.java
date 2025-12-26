@@ -2,38 +2,41 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.UserProfile;
 import com.example.demo.service.UserProfileService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/User")
 public class UserProfileController {
 
-    private final UserProfileService userProfileService;
+    private final UserProfileService userService;
 
-    public UserProfileController(UserProfileService userProfileService) {
-        this.userProfileService = userProfileService;
+    public UserProfileController(UserProfileService userService) {
+        this.userService = userService;
     }
 
     @PostMapping
-    public UserProfile createUser(@RequestBody UserProfile user) {
-        return userProfileService.createUser(user);
+    public ResponseEntity<UserProfile> createUser(@RequestBody UserProfile user) {
+        return ResponseEntity.ok(userService.createUser(user));
     }
 
     @GetMapping("/{id}")
-    public UserProfile getUser(@PathVariable Long id) {
-        return userProfileService.getUserById(id);
+    public ResponseEntity<UserProfile> getUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @GetMapping
-    public List<UserProfile> getAllUsers() {
-        return userProfileService.getAllUsers();
+    public ResponseEntity<List<UserProfile>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @PutMapping("/{id}/{status}")
-    public UserProfile updateStatus(@PathVariable Long id,
-                                    @PathVariable boolean status) {
-        return userProfileService.updateUserStatus(id, status);
+    @PutMapping("/{id}/status")
+    public ResponseEntity<UserProfile> updateStatus(
+            @PathVariable Long id,
+            @RequestParam boolean active) {
+
+        return ResponseEntity.ok(userService.updateUserStatus(id, active));
     }
 }

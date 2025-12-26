@@ -1,27 +1,92 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.JwtResponse;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
-import com.example.demo.dto.JwtResponse;
-import com.example.demo.service.UserProfileService;
+import com.example.demo.entity.UserProfile;
 import com.example.demo.repository.UserProfileRepository;
 import com.example.demo.security.JwtUtil;
+import com.example.demo.service.UserProfileService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
+@RequestMapping("/auth")
 public class AuthController {
 
-    public AuthController(UserProfileService userProfileService,
+    private final UserProfileService userService;
+    private final UserProfileRepository userRepo;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+
+    public AuthController(UserProfileService userService,
                           UserProfileRepository userRepo,
-                          AuthenticationManager authManager,
+                          AuthenticationManager authenticationManager,
                           JwtUtil jwtUtil) {
-        // store references if needed
+        this.userService = userService;
+        this.userRepo = userRepo;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
     }
 
-    public JwtResponse login(LoginRequest request) {
-        return new JwtResponse("dummy-token");
+    @PostMapping("/register")
+    public ResponseEntity<JwtResponse> register(
+            @RequestBody RegisterRequest request) {
+
+        UserProfile user = new UserProfile();
+        user.setUserId(request.getUserId());
+        user.setFullName(request.getFullName());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setRole(request.getRole());
+
+        UserProfile saved = userService.createUser(user);
+
+        String token = jwtUtil.generateToken(
+                saved.getId(),
+                saved.getEmail(),
+                saved.getRole()
+        );
+
+        JwtResponse response = new JwtResponse(
+                token,
+                saved.getId(),
+                saved.getEmail(),
+                saved.getRole()
+        );
+
+        return ResponseEntity.ok(response);
     }
 
-    public String register(RegisterRequest request) {
-        return "User registered successfully";
+    @PostMapping("/login")
+    public ResponseEntity<JwtResponse> login(
+            @RequestBody LoginRequest request) {
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+
+        UserProfile user = userRepo.findByEmail(request.getEmail())
+                .orElseThrow();
+
+        String token = jwtUtil.generateToken(
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
+        );
+
+        JwtResponse response = new JwtResponse(
+                token,
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
+        );
+
+        return ResponseEntity.ok(response);
     }
 }
