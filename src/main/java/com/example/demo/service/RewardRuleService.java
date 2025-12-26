@@ -1,16 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.RewardRule;
-
 import java.util.List;
 
 public interface RewardRuleService {
-
-    List<RewardRule> getAllRules();
-
-    RewardRule getRewardRuleById(Long id);
-
-    RewardRule saveRewardRule(RewardRule rule);
-
-    void deleteRewardRule(Long id);
+    RewardRule createRule(RewardRule rewardRule);
+    RewardRule updateRule(Long id, RewardRule rewardRule);
+    List<RewardRule> getRulesByCard(Long cardId);
+    List<RewardRule> getActiveRules();
 }

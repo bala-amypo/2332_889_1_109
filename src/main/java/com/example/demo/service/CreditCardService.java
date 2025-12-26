@@ -4,12 +4,8 @@ import com.example.demo.entity.CreditCardRecord;
 import java.util.List;
 
 public interface CreditCardService {
-
-    List<CreditCardRecord> getAllCards();
-
-    CreditCardRecord getCreditCardById(Long id);
-
-    CreditCardRecord saveCreditCard(CreditCardRecord card);
-
-    void deleteCreditCard(Long id);
+    CreditCardRecord addCard(CreditCardRecord creditCard);
+    CreditCardRecord updateCard(Long id, CreditCardRecord creditCard);
+    List<CreditCardRecord> getCardsByUser(Long userId);
+    CreditCardRecord getCardById(Long id);
 }
