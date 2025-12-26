@@ -1,30 +1,38 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.RewardRule;
+import com.example.demo.repository.RewardRuleRepository;
+import com.example.demo.service.RewardRuleService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class RewardRuleServiceImpl implements RewardRuleService {
 
-    private final RewardRuleRepository repository;
+    private final RewardRuleRepository rewardRuleRepository;
 
-    public RewardRuleServiceImpl(RewardRuleRepository repository) {
-        this.repository = repository;
+    public RewardRuleServiceImpl(RewardRuleRepository rewardRuleRepository) {
+        this.rewardRuleRepository = rewardRuleRepository;
     }
 
     @Override
-    public RewardRule createRule(RewardRule rule) {
-        return repository.save(rule);
+    public List<RewardRule> getAllRules() {
+        return rewardRuleRepository.findAll();
     }
 
     @Override
-    public RewardRule updateRule(Long id, RewardRule rule) {
-        rule.setId(id);
-        return repository.save(rule);
+    public RewardRule getRewardRuleById(Long id) {
+        return rewardRuleRepository.findById(id).orElse(null);
     }
 
     @Override
-    public List<RewardRule> getRulesByCard(Long cardId) {
-        return repository.findByCardId(cardId);
+    public RewardRule saveRewardRule(RewardRule rule) {
+        return rewardRuleRepository.save(rule);
     }
 
     @Override
-    public List<RewardRule> getActiveRules() {
-        return repository.findByActiveTrue();
+    public void deleteRewardRule(Long id) {
+        rewardRuleRepository.deleteById(id);
     }
 }

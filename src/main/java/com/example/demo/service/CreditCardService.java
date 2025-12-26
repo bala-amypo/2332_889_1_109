@@ -5,11 +5,11 @@ import java.util.List;
 
 public interface CreditCardService {
 
-    CreditCardRecord addCard(CreditCardRecord card);
+    List<CreditCardRecord> getAllCards();
 
-    CreditCardRecord updateCard(Long id, CreditCardRecord card);
+    CreditCardRecord getCreditCardById(Long id);
 
-    List<CreditCardRecord> getCardsByUser(Long userId);
+    CreditCardRecord saveCreditCard(CreditCardRecord card);
 
-    CreditCardRecord getCardById(Long id);
+    void deleteCreditCard(Long id);
 }

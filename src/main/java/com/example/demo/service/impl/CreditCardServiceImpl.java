@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.CreditCardRecord;
-import com.example.demo.repository.CreditCardRepository;
+import com.example.demo.repository.CreditCardRecordRepository;
 import com.example.demo.service.CreditCardService;
 import org.springframework.stereotype.Service;
 
@@ -10,30 +10,29 @@ import java.util.List;
 @Service
 public class CreditCardServiceImpl implements CreditCardService {
 
-    private final CreditCardRepository creditCardRepository;
+    private final CreditCardRecordRepository creditCardRepository;
 
-    public CreditCardServiceImpl(CreditCardRepository creditCardRepository) {
+    public CreditCardServiceImpl(CreditCardRecordRepository creditCardRepository) {
         this.creditCardRepository = creditCardRepository;
     }
 
     @Override
-    public CreditCardRecord addCard(CreditCardRecord card) {
-        return creditCardRepository.save(card);
+    public List<CreditCardRecord> getAllCards() {
+        return creditCardRepository.findAll();
     }
 
     @Override
-    public CreditCardRecord updateCard(Long id, CreditCardRecord card) {
-        card.setId(id);
-        return creditCardRepository.save(card);
-    }
-
-    @Override
-    public List<CreditCardRecord> getCardsByUser(Long userId) {
-        return creditCardRepository.findByUserId(userId);
-    }
-
-    @Override
-    public CreditCardRecord getCardById(Long id) {
+    public CreditCardRecord getCreditCardById(Long id) {
         return creditCardRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public CreditCardRecord saveCreditCard(CreditCardRecord card) {
+        return creditCardRepository.save(card);
+    }
+
+    @Override
+    public void deleteCreditCard(Long id) {
+        creditCardRepository.deleteById(id);
     }
 }
