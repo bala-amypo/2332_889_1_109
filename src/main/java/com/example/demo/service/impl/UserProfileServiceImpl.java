@@ -16,7 +16,12 @@ public class UserProfileServiceImpl implements UserProfileService {
     
     @Override
     public UserProfile getUserProfile(String userId) {
-        // Change this line from findByUserId(userId) to findByUserId(userId)
+        return userProfileRepository.findByUserId(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+    
+    @Override
+    public UserProfile findByUserId(String userId) {
         return userProfileRepository.findByUserId(userId)
             .orElseThrow(() -> new RuntimeException("User not found"));
     }
