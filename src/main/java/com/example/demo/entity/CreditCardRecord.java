@@ -1,45 +1,38 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 public class CreditCardRecord {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
-    private String cardName;
-    private String issuer;
-    private Double annualFee;
-    private String status;
-    private LocalDateTime createdAt;
+    private String cardNumber;
+    private String cardHolderName;
 
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
+    public Long getId() {
+        return id;
     }
 
-    // getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public String getCardNumber() {
+        return cardNumber;
+    }
 
-    public String getCardName() { return cardName; }
-    public void setCardName(String cardName) { this.cardName = cardName; }
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
 
-    public String getIssuer() { return issuer; }
-    public void setIssuer(String issuer) { this.issuer = issuer; }
+    public String getCardHolderName() {
+        return cardHolderName;
+    }
 
-    public Double getAnnualFee() { return annualFee; }
-    public void setAnnualFee(Double annualFee) { this.annualFee = annualFee; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCardHolderName(String cardHolderName) {
+        this.cardHolderName = cardHolderName;
+    }
 }
