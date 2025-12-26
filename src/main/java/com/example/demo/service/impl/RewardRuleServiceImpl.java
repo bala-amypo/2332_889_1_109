@@ -3,41 +3,54 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.RewardRule;
 import com.example.demo.repository.RewardRuleRepository;
 import com.example.demo.service.RewardRuleService;
+import com.example.demo.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class RewardRuleServiceImpl implements RewardRuleService {
-    
-    private final RewardRuleRepository rewardRuleRepository;
-    
-    public RewardRuleServiceImpl(RewardRuleRepository rewardRuleRepository) {
-        this.rewardRuleRepository = rewardRuleRepository;
+
+    private final RewardRuleRepository repository;
+
+    public RewardRuleServiceImpl(RewardRuleRepository repository) {
+        this.repository = repository;
     }
-    
+
+    // Test Mappings
     @Override
-    public RewardRule createRule(RewardRule rewardRule) {
-        return rewardRuleRepository.save(rewardRule);
+    public RewardRule createRule(RewardRule rule) {
+        return repository.save(rule);
     }
-    
-    @Override
-    public RewardRule updateRule(Long id, RewardRule rewardRule) {
-        rewardRule.setId(id);
-        return rewardRuleRepository.save(rewardRule);
-    }
-    
-    @Override
-    public List<RewardRule> getRulesByCard(Long cardId) {
-        return rewardRuleRepository.findByCardId(cardId);
-    }
-    
+
     @Override
     public List<RewardRule> getActiveRules() {
-        return rewardRuleRepository.findByIsActiveTrue();
+        return repository.findByActiveTrue();
     }
-    
+
     @Override
     public List<RewardRule> getAllRules() {
-        return rewardRuleRepository.findAll();
+        return repository.findAll();
+    }
+
+    // Controller Mappings
+    @Override
+    public RewardRule addRewardRule(RewardRule rule) {
+        return repository.save(rule);
+    }
+
+    @Override
+    public RewardRule getRewardRuleById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
+    }
+
+    @Override
+    public List<RewardRule> getAllRewardRules() {
+        return repository.findAll();
+    }
+
+    @Override
+    public void deleteRewardRule(Long id) {
+        repository.deleteById(id);
     }
 }

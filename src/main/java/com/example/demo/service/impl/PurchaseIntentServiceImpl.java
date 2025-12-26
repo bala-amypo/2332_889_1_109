@@ -1,37 +1,39 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.PurchaseIntentRecord;
-import com.example.demo.repository.PurchaseIntentRepository;
+import com.example.demo.repository.PurchaseIntentRecordRepository;
 import com.example.demo.service.PurchaseIntentService;
+import com.example.demo.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class PurchaseIntentServiceImpl implements PurchaseIntentService {
-    
-    private final PurchaseIntentRepository purchaseIntentRepository;
-    
-    public PurchaseIntentServiceImpl(PurchaseIntentRepository purchaseIntentRepository) {
-        this.purchaseIntentRepository = purchaseIntentRepository;
+
+    private final PurchaseIntentRecordRepository repository;
+
+    public PurchaseIntentServiceImpl(PurchaseIntentRecordRepository repository) {
+        this.repository = repository;
     }
-    
+
     @Override
-    public PurchaseIntentRecord createIntent(PurchaseIntentRecord purchaseIntent) {
-        return purchaseIntentRepository.save(purchaseIntent);
+    public PurchaseIntentRecord createIntent(PurchaseIntentRecord intent) {
+        return repository.save(intent);
     }
-    
-    @Override
-    public List<PurchaseIntentRecord> getAllIntents() {
-        return purchaseIntentRepository.findAll();
-    }
-    
-    @Override
-    public List<PurchaseIntentRecord> getIntentsByUser(Long userId) {
-        return purchaseIntentRepository.findByUserId(userId);
-    }
-    
+
     @Override
     public PurchaseIntentRecord getIntentById(Long id) {
-        return purchaseIntentRepository.findById(id).orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Intent not found"));
+    }
+
+    @Override
+    public List<PurchaseIntentRecord> getAllIntents() {
+        return repository.findAll();
+    }
+
+    @Override
+    public List<PurchaseIntentRecord> getIntentsByUser(Long userId) {
+        return repository.findByUserId(userId);
     }
 }

@@ -4,9 +4,14 @@ import com.example.demo.entity.RewardRule;
 import java.util.List;
 
 public interface RewardRuleService {
-    RewardRule createRule(RewardRule rewardRule);
-    RewardRule updateRule(Long id, RewardRule rewardRule);
-    List<RewardRule> getRulesByCard(Long cardId);
+    // Methods for the Test
+    RewardRule createRule(RewardRule rule);
     List<RewardRule> getActiveRules();
-    List<RewardRule> getAllRules(); // Add this method
+    List<RewardRule> getAllRules();
+
+    // Methods for the Controller
+    RewardRule addRewardRule(RewardRule rule);
+    RewardRule getRewardRuleById(Long id);
+    List<RewardRule> getAllRewardRules();
+    void deleteRewardRule(Long id);
 }

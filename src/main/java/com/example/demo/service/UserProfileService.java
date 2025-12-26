@@ -5,11 +5,13 @@ import java.util.List;
 
 public interface UserProfileService {
 
-    UserProfile createUser(UserProfile user);
+    UserProfile createUser(UserProfile userProfile);
+
+    UserProfile getUserByEmail(String email);
 
     UserProfile getUserById(Long id);
 
     List<UserProfile> getAllUsers();
 
-    UserProfile updateUserStatus(Long id, boolean status);
+    UserProfile updateUserStatus(Long id, boolean active);
 }
