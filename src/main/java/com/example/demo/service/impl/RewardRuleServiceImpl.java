@@ -35,4 +35,9 @@ public class RewardRuleServiceImpl implements RewardRuleService {
     public List<RewardRule> getActiveRules() {
         return rewardRuleRepository.findByIsActiveTrue();
     }
+    
+    @Override
+    public List<RewardRule> getAllRules() {
+        return rewardRuleRepository.findAll();
+    }
 }

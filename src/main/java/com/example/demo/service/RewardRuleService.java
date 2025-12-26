@@ -8,4 +8,5 @@ public interface RewardRuleService {
     RewardRule updateRule(Long id, RewardRule rewardRule);
     List<RewardRule> getRulesByCard(Long cardId);
     List<RewardRule> getActiveRules();
+    List<RewardRule> getAllRules(); // Add this method
 }

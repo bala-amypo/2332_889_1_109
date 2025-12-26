@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface CreditCardRepository extends JpaRepository<CreditCardRecord, Long> {
-    List<CreditCardRecord> findByUserId(Long userId); // Add if missing
+    List<CreditCardRecord> findByUserId(Long userId);
 }
