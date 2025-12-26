@@ -1,38 +1,30 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.RewardRule;
-import com.example.demo.repository.RewardRuleRepository;
-import com.example.demo.service.RewardRuleService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 @Service
 public class RewardRuleServiceImpl implements RewardRuleService {
 
-    private final RewardRuleRepository rewardRuleRepository;
+    private final RewardRuleRepository repository;
 
-    public RewardRuleServiceImpl(RewardRuleRepository rewardRuleRepository) {
-        this.rewardRuleRepository = rewardRuleRepository;
+    public RewardRuleServiceImpl(RewardRuleRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public List<RewardRule> getAllRules() {
-        return rewardRuleRepository.findAll();
+    public RewardRule createRule(RewardRule rule) {
+        return repository.save(rule);
     }
 
     @Override
-    public RewardRule getRewardRuleById(Long id) {
-        return rewardRuleRepository.findById(id).orElse(null);
+    public RewardRule updateRule(Long id, RewardRule rule) {
+        rule.setId(id);
+        return repository.save(rule);
     }
 
     @Override
-    public RewardRule saveRewardRule(RewardRule rule) {
-        return rewardRuleRepository.save(rule);
+    public List<RewardRule> getRulesByCard(Long cardId) {
+        return repository.findByCardId(cardId);
     }
 
     @Override
-    public void deleteRewardRule(Long id) {
-        rewardRuleRepository.deleteById(id);
+    public List<RewardRule> getActiveRules() {
+        return repository.findByActiveTrue();
     }
 }
