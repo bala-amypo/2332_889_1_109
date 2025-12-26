@@ -5,24 +5,36 @@ import com.example.demo.repository.UserProfileRepository;
 import com.example.demo.service.UserProfileService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserProfileServiceImpl implements UserProfileService {
-    
-    private final UserProfileRepository userProfileRepository;
-    
-    public UserProfileServiceImpl(UserProfileRepository userProfileRepository) {
-        this.userProfileRepository = userProfileRepository;
+
+    private final UserProfileRepository repository;
+
+    public UserProfileServiceImpl(UserProfileRepository repository) {
+        this.repository = repository;
     }
-    
+
     @Override
-    public UserProfile getUserProfile(String userId) {
-        return userProfileRepository.findByUserId(userId)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+    public UserProfile createUser(UserProfile user) {
+        return repository.save(user);
     }
-    
+
     @Override
-    public UserProfile findByUserId(String userId) {
-        return userProfileRepository.findByUserId(userId)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+    public UserProfile getUserById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<UserProfile> getAllUsers() {
+        return repository.findAll();
+    }
+
+    @Override
+    public UserProfile updateUserStatus(Long id, boolean status) {
+        UserProfile user = repository.findById(id).orElse(null);
+        user.setActive(status);
+        return repository.save(user);
     }
 }

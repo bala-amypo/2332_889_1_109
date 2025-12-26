@@ -1,8 +1,15 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.UserProfile;
+import java.util.List;
 
 public interface UserProfileService {
-    UserProfile getUserProfile(String userId);
-    UserProfile findByUserId(String userId); // Add this if it's missing
+
+    UserProfile createUser(UserProfile user);
+
+    UserProfile getUserById(Long id);
+
+    List<UserProfile> getAllUsers();
+
+    UserProfile updateUserStatus(Long id, boolean status);
 }
